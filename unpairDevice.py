@@ -20,7 +20,7 @@ def unpair_user_device(deviceId, userName):
      'clientData': ''
   }
 
-  return pingid.call('rest/4/unpairdevice/do', device_req_body)
+  return pingid.call('rest/4/unpairdevice/do', req_body)
 
 # main logic
 arguments = len(sys.argv) - 1

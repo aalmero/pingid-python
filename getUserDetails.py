@@ -3,8 +3,13 @@ import pingid
 
 PROPERTIES_FILE = './pingid.properties'
 
-def get_user_details(driver, params):
-  return driver.call('rest/4/getuserdetails/do', params)  
+def get_user_details(driver, userName):
+  req_body = {
+   'getSameDeviceUsers':'true',
+   'userName': userName,
+  }
+
+  return driver.call('rest/4/getuserdetails/do', req_body)  
 
 # main logic
 arguments = len(sys.argv) - 1
@@ -14,14 +19,9 @@ if arguments == 0:
 
 userName = sys.argv[1]
 
-req_body = {
-   'getSameDeviceUsers':'true',
-   'userName': userName,
-  }
-
 pingid = pingid.PingIDDriver(PROPERTIES_FILE, verbose=False)
 
-response_body = get_user_details(pingid, req_body)
+response_body = get_user_details(pingid, userName)
 
 status = response_body['responseBody']['errorId']
 

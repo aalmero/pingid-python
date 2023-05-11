@@ -3,9 +3,24 @@ import pingid
 
 PROPERTIES_FILE = './pingid.properties'
 
-def get_user_details(driver, params):
-  return driver.call('rest/4/getuserdetails/do', params)  
+pingid = pingid.PingIDDriver(PROPERTIES_FILE, verbose=False)
 
+def get_user_details(userName):
+  req_body = {
+   'getSameDeviceUsers':'true',
+   'userName': userName,
+  }
+
+  return pingid.call('rest/4/getuserdetails/do', req_body)  
+
+def unpair_user_device(deviceId, userName):
+  req_body = {
+     'deviceId': deviceId,
+     'userName': userName,
+     'clientData': ''
+  }
+
+  return pingid.call('rest/4/unpairdevice/do', device_req_body)
 
 # main logic
 arguments = len(sys.argv) - 1
@@ -15,14 +30,7 @@ if arguments == 0:
 
 userName = sys.argv[1]
 
-user_req_body = {
-   'getSameDeviceUsers':'true',
-   'userName': userName,
-  }
-
-pingid = pingid.PingIDDriver(PROPERTIES_FILE, verbose=False)
-#user_response_body = pingid.call('rest/4/getuserdetails/do', user_req_body)
-user_response_body = get_user_details(pingid, user_req_body)
+user_response_body = get_user_details(userName)
 
 status = user_response_body['responseBody']['errorId']
 
@@ -31,14 +39,8 @@ if status is 200:
   userDetails = user_response_body['responseBody']['userDetails']
   deviceId = userDetails['deviceDetails']['deviceId']
 
-  device_req_body = {
-     'deviceId': deviceId,
-     'userName': userName,
-     'clientData': ''
-    }
-
-  device_response_body = pingid.call('rest/4/unpairdevice/do', device_req_body)
-
+  device_response_body = unpair_user_device(deviceId, userName)
+  
   status = device_response_body['responseBody']['errorId']
 
   if status is 200:

@@ -28,12 +28,12 @@ status = response_body['responseBody']['errorId']
 if status is 200:
   userDetails = response_body['responseBody']['userDetails']
 
-  print('userName: ' + userDetails['userName'])
-  print('email: ' + userDetails['email'])
-  print('status: ' + userDetails['status'])
-  print('deviceId: ' + str(userDetails['deviceDetails']['deviceId']))
-  intLastLogin = int(userDetails['lastLogin']/1000)
-  print('lastLogin: ' + time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(intLastLogin)))
+  print('userName: {0}'.format(userDetails['userName']))
+  print('email: {0}'.format(userDetails['email'] if userDetails['email'] is not None else ''))
+  print('status: {0}'.format(userDetails['status'] if userDetails['status'] is not None else ''))
+  print('deviceId: {0}'.format(str(userDetails['deviceDetails']['deviceId']) if userDetails['deviceDetails'] else 0))
+  intLastLogin = int(userDetails['lastLogin']/1000 if userDetails['lastLogin'] is not None else 0)
+  print('lastLogin: {0}'.format(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(intLastLogin))))
 
 else:
   print('[!] Get User Details Request Failed.')
